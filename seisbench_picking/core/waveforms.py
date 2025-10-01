@@ -73,14 +73,17 @@ def get_waveforms_client(
     )
 
     # Read waveform data using obspy client
-    stream = client.get_waveforms(
-        network=network,
-        station=station,
-        location=location,
-        channel=f"{channel_code}*",
-        starttime=starttime_stream,
-        endtime=endtime_stream,
-    )
+    try:
+        stream = client.get_waveforms(
+            network=network,
+            station=station,
+            location=location,
+            channel=f"{channel_code}*",
+            starttime=starttime_stream,
+            endtime=endtime_stream,
+        )
+    except ValueError:
+        return obspy.Stream()
 
     # Merge stream and fill gaps with zeros
     stream.merge(fill_value=0)
