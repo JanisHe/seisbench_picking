@@ -1,0 +1,17 @@
+starttime: 2024-03-02 06:28      # Start time to pick seismic traces
+endtime: 2024-03-02 06:35        # Endtime of picking
+sds_path: /home/jheuel/data/SDS  # SDS path of seismic data
+stations: /home/jheuel/nextcloud/code/seisbench_picking/metadata/stations.csv  # Stations file
+output_pathname: /home/jheuel/nextcloud/code/seisbench_picking/results         # Pathname to save data
+station_wise: False  # Optional | If True, picks are saved in a file for each station, otherwise one file with all picks will be saved. Default is False
+workers: 10          # Number of CPUs / workers to pick in parallel
+############# Picking parameters ###############
+picking:
+  picker: phasenet      # Select SeisBench picker, for example phasenet, eqt, gpd, pickblue, skynet, dpp, lfedetect, ...
+  model: original       # Load weights of a trained model
+  P_threshold: 0.2      # Optional | Select threshold to detect P phases (if not set, model's default threshold is used)
+  S_threshold: 0.2      # Optional | Select threshold to detect S phases (if not set, model's default threshold is used)
+  overlap: 0.75         # Optional | Overlap of neighbouring windows (either in samples or in fraction, i.e. from ramge [0, 1], if not set, model's default threshold is used)
+  batch_size: 256       # Optional | Batch size for prediction (larger batch size requires more memory, if not set, model's default threshold is used)
+  blinding: [250, 250]  # Optional | Removes edges of the prediction (in samples) to avoid site effects (if not set, model's default threshold is used)
+  stacking: max         # Optional | Stacking overlapping windows. Either by maximum (max) or average (avg). If not set, model's default threshold is used
