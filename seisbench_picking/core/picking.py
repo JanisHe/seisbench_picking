@@ -1,6 +1,7 @@
 import os
 import gc
 import glob
+import copy
 import pathlib
 
 import joblib
@@ -201,8 +202,11 @@ def pick_waveforms(
         print("Loaded picker settings:")
         for key, value in picking_args.items():
             print(f"{key}: {value}")
+
+    # Copy picker args to avoid overwriting py pop
+    tmp_picking_args = copy.deepcopy(picking_args)
     picker = get_picker(
-        type=picking_args.pop("picker"), model_name=picking_args.pop("model")
+        type=tmp_picking_args.pop("picker"), model_name=tmp_picking_args.pop("model")
     )
 
     # Pick waveforms in parallel
@@ -212,7 +216,7 @@ def pick_waveforms(
             date_station=value,
             sds_path=sds_path,
             picker=picker,
-            picking_args=picking_args,
+            picking_args=tmp_picking_args,
             starttime=starttime,
             endtime=endtime,
             output_pathname=output_pathname,
