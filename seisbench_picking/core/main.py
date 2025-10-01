@@ -14,10 +14,11 @@ from seisbench_picking.core.utils import date_list, check_parameters
 from seisbench_picking.core.picking import pick_waveforms
 
 
-def main(parfile: Union[str, dict]):
+def main(parfile: Union[str, dict], verbose: bool = True):
     """
 
     :param parfile:
+    :param verbose:
     :return:
     """
     # Read parameter file
@@ -69,6 +70,7 @@ def main(parfile: Union[str, dict]):
         picking_args=parameters["picking"],
         workers=parameters["workers"],
         station_wise=parameters["station_wise"],
+        verbose=verbose,
     )
 
     print(f"Finished picking after {time.time() - pick_stime:.2f} s.")
