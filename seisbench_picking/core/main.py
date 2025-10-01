@@ -37,13 +37,15 @@ def main(parfile: Union[str, dict]):
     if not os.path.isdir(parameters["output_pathname"]):
         os.makedirs(parameters["output_pathname"])
     try:
-        shutil.copyfile(
-            src=parfile, dst=os.path.join(parameters["output_pathname"], "parfile.yml")
-        )
-        shutil.copyfile(
-            src=parameters["stations"],
-            dst=os.path.join(parameters["output_pathname"], "stations.csv"),
-        )
+        if isinstance(parfile, str):
+            shutil.copyfile(
+                src=parfile,
+                dst=os.path.join(parameters["output_pathname"], "parfile.yml"),
+            )
+            shutil.copyfile(
+                src=parameters["stations"],
+                dst=os.path.join(parameters["output_pathname"], "stations.csv"),
+            )
     except shutil.SameFileError as e:
         print(e)
         print("Keeping old file and do not overwrite")
