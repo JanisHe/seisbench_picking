@@ -168,7 +168,7 @@ def pick_waveforms(
     workers: int = 1,
     station_wise: bool = False,
     verbose: bool = True,
-):
+) -> None:
     """
 
     :param dates:

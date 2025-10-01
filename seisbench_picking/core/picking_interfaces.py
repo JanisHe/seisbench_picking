@@ -14,6 +14,11 @@ def get_picker(type: str, model_name: str):
             picker = sbm.PhaseNet.load(model_name)
         except FileNotFoundError:
             picker = sbm.PhaseNet.from_pretrained(model_name)
+    elif type.lower() == "eqt":
+        try:
+            picker = sbm.EQTransformer.load(model_name)
+        except FileNotFoundError:
+            picker = sbm.EQTransformer.from_pretrained(model_name)
     else:
         msg = f"SeisBench model {type} is not implemented in core.picking_interfaces.py"
         raise ValueError(msg)
