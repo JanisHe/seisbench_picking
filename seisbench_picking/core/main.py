@@ -6,21 +6,29 @@ import shutil
 
 import pandas as pd
 
+from typing import Union
+
 from obspy import UTCDateTime
 
 from seisbench_picking.core.utils import date_list, check_parameters
 from seisbench_picking.core.picking import pick_waveforms
 
 
-def main(parfile):
+def main(parfile: Union[str, dict]):
     """
 
     :param parfile:
     :return:
     """
     # Read parameter file
-    with open(parfile, "r") as f:
-        parameters = yaml.safe_load(f)
+    if isinstance(parfile, str):
+        with open(parfile, "r") as f:
+            parameters = yaml.safe_load(f)
+    elif isinstance(parfile, dict):
+        parameters = parfile
+    else:
+        msg = f"parfile must be either of type 'str' or 'dict' but is of type {type(parfile)}."
+        raise ValueError(msg)
 
     # Check all parameters in parfile
     parameters = check_parameters(parameters=parameters)
