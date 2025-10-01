@@ -19,6 +19,11 @@ def get_picker(type: str, model_name: str):
             picker = sbm.EQTransformer.load(model_name)
         except FileNotFoundError:
             picker = sbm.EQTransformer.from_pretrained(model_name)
+    elif type.lower() == "gpd":
+        try:
+            picker = sbm.GPD.load(model_name)
+        except FileNotFoundError:
+            picker = sbm.GPD.from_pretrained(model_name)
     else:
         msg = f"SeisBench model {type} is not implemented in core.picking_interfaces.py"
         raise ValueError(msg)
