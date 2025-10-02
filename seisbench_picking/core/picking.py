@@ -1,3 +1,7 @@
+"""
+Functions that do the picking in parallel (using joblib).
+"""
+
 import os
 import gc
 import glob
@@ -19,10 +23,10 @@ from seisbench_picking.core.picking_interfaces import get_picker
 
 def export_picks(filename: str, picklist: seisbench.util.annotations.PickList) -> None:
     """
-    Converting picks from SeisBench picklist to a dictionary and save as a csv file
-    :param filename:
-    :param picklist:
-    :return:
+    Converting picks from SeisBench picklist to a dictionary and save as a csv file.
+
+    :param filename: Full pathname of csv file to save picks
+    :param picklist: Input SeisBench Picklist that contains picks.
     """
     picks = {
         "id": [],
@@ -47,11 +51,14 @@ def export_picks(filename: str, picklist: seisbench.util.annotations.PickList) -
 
 def picks_postprocessing(output_pathname: str, station_wise: bool = False) -> None:
     """
-    Does postprocessing of temporary pick files.
+    Does postprocessing of temporary pick files, i.e. reads single csv files and
+    adds all together either to one file (station_wise = False) or to one file
+    for each station (station_wise = True).
 
-    :param output_pathname:
-    :param station_wise:
-    :return:
+    :param output_pathname: Full Pathname where to store the picks
+    :param station_wise: If True, the picks will be saved as a file for each station.
+                         If False, only one large file that contains all picks is created.
+                         Default is False
     """
     pick_files = glob.glob(os.path.join(output_pathname, "*.pick"))
     picks = {}
@@ -114,15 +121,18 @@ def _pick_waveform(
     output_pathname: str,
 ) -> None:
     """
+    Picking waveform data from an obspy Stream that is created through this function.
+    Only creates one single stream for a certain date.
 
-    :param date_station:
-    :param sds_path:
-    :param picker:
-    :param picking_args:
-    :param starttime:
-    :param endtime:
-    :param output_pathname:
-    :return:
+    :param date_station: First entry of tuple is year, second one is the day of the year
+                         third one the ID of the trace, and the fourth value is the channel code.
+    :param sds_path: Pathname to SeisComp Data Structure (SDS)
+    :param picker: Neural Network in SeisBench that picks seismic onsets
+    :param picking_args: Dictionary that contains information for the picker.
+                         For an example, see the parfile
+    :param starttime: Start time of period for picking
+    :param endtime: End time of picking period
+    :param output_pathname: Full pathname to save the data
     """
     # Find network, station, and location from date_station
     try:
@@ -171,18 +181,23 @@ def pick_waveforms(
     verbose: bool = True,
 ) -> None:
     """
+    Function to start the picking in parallel.
 
-    :param dates:
-    :param stations:
-    :param sds_path:
-    :param starttime:
-    :param endtime:
-    :param output_pathname:
-    :param picking_args:
-    :param workers:
-    :param station_wise:
-    :param verbose:
-    :return:
+    :param dates: List of tuple that contains all dates for picking. Each tuple has to values, the
+                  first value represents the year and the second the day of the year.
+    :param stations: Dataframe that contains station information, i.e. id and channel code.
+    :param sds_path: Pathname to SeisComp Data Structure (SDS)
+    :param starttime: Start time of period for picking
+    :param endtime: End time of picking period
+    :param output_pathname: Full pathname to save the data
+    :param picking_args: Dictionary that contains information for the picker.
+                         For an example, see the parfile
+    :param workers: Number of workers for parallelization
+    :param station_wise: If True, the picks will be saved as a file for each station.
+                         If False, only one large file that contains all picks is created.
+                         Default is False
+    :param verbose: If True, the loaded information about the picker will be printed.
+                    Default is True
     """
     # Convert start- and end time
     if isinstance(starttime, str):

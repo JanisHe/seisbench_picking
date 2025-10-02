@@ -9,6 +9,14 @@ import seisbench.models as sbm  # noqa
 
 
 def get_picker(type: str, model_name: str):
+    """
+    Load picker from SeisBench.
+    If picker or model is not available, an error is raised.
+    Note pickers can be easily added by extending the code.
+
+    :param type: Neural network of SeisBench picker
+    :param model_name: Name or filename of pretrained weights for picker
+    """
     if type.lower() == "phasenet":
         try:
             picker = sbm.PhaseNet.load(model_name)

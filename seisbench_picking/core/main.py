@@ -16,10 +16,13 @@ from seisbench_picking.core.picking import pick_waveforms
 
 def main(parfile: Union[str, dict], verbose: bool = True):
     """
+    Main function to start picking using SeisBench picking models.
+    The function takes as input either the full pathname of a parfile
+    (e.g. ../parfiles/parfile.yml) or a dictionary that contains all
+    parameters from parfile as keys and values as items.
 
-    :param parfile:
-    :param verbose:
-    :return:
+    :param parfile: Full pathname or dictionary that contains all required parameters
+    :param verbose: If True, some information will be printed. Default is False.
     """
     # Read parameter file
     if isinstance(parfile, str):

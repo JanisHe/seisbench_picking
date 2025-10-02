@@ -1,3 +1,7 @@
+"""
+Contains helper functions.
+"""
+
 import os
 import warnings
 import datetime
@@ -52,9 +56,10 @@ def station_and_dates(dates: list, stations: list, channel_codes: list) -> list:
 
 def check_parameters(parameters: dict) -> dict:
     """
+    Checks parameters from loaded parfile.
+    Raises an error if the parameters contains errors.
 
-    :param parameters:
-    :return:
+    :param parameters: Dictionary that contains keys and values for picking.
     """
     if obspy.UTCDateTime(parameters["starttime"]) >= obspy.UTCDateTime(
         parameters["endtime"]

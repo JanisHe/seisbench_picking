@@ -17,11 +17,14 @@ def start_and_endtime(
     endtime: Optional[obspy.UTCDateTime] = None,
 ) -> (obspy.UTCDateTime, obspy.UTCDateTime):
     """
+    Checks from given date (year, day of year) whether start- and end time of stream
+    needs to be modified, for example at the beginning and end of the picking period.
+    It returns a start- and end time to read data using either an obspy client or
+    the read function from obspy.
 
-    :param date:
-    :param starttime:
-    :param endtime:
-    :return:
+    :param date: Tuple (year, day of year)
+    :param starttime: Start time of picking period
+    :param endtime: End time of picking period
     """
     # Get start- and end time from julian day in date
     date_from_doy = datetime.datetime(
@@ -45,8 +48,8 @@ def start_and_endtime(
 
 
 def get_waveforms_client(
-    station: str,
     network: str,
+    station: str,
     location: str,
     channel_code: str,
     date: tuple[int, int],
@@ -55,17 +58,19 @@ def get_waveforms_client(
     endtime: Optional[obspy.UTCDateTime] = None,
 ) -> obspy.Stream:
     """
-    Reads waveform data from obspy client.
+    Reads waveform data from a given obspy SDS client.
+    The function returns an obspy Stream. If no data are
+    found, the stream does not contain any trace.
+    Gaps are filled by zeros (stream.merge(fill_value=0)).
 
-    :param station:
-    :param network:
-    :param location:
-    :param channel_code:
-    :param date: tuple(year, day of year)
-    :param client:
-    :param starttime:
-    :param endtime:
-    :return:
+    :param network: Name of seismic network
+    :param station: Name of seismic station
+    :param location: Location code of seismic station
+    :param channel_code: Channel code of seismic station, e.g. HH, EH, BH, ...
+    :param date: Information about the date as a tuple (year, day of year)
+    :param client: Obspy SDS client
+    :param starttime: Start time of the picking period
+    :param endtime: End time of the picking period
     """
     # Get start- and end time from julian day in date
     starttime_stream, endtime_stream = start_and_endtime(
@@ -103,16 +108,18 @@ def get_waveforms_sds_path(
 ) -> obspy.Stream:
     """
     Backup function if reading waveform data from obspy SDS client does not work.
+    In that case, this function tries to create an own pathname to read the
+    seismic data from the SDS path. If no data are found, the stream contains
+    no data. Gaps are filled by zeros (stream.merge(fill_value=0)).
 
-    :param network:
-    :param station:
-    :param location:
-    :param channel_code:
-    :param date:
-    :param sds_path:
-    :param starttime:
-    :param endtime:
-    :return:
+    :param network: Name of seismic network
+    :param station: Name of seismic station
+    :param location: Location code of seismic station
+    :param channel_code: Channel code of seismic station, e.g. HH, EH, BH, ...
+    :param date: Information about the date as a tuple (year, day of year)
+    :param sds_path: Pathname of SDS (SeisComp Data Structure)
+    :param starttime: Start time of the picking period
+    :param endtime: End time of the picking period
     """
     if not os.path.isdir(sds_path):
         msg = f"Pathname {sds_path} to read waveform data does not exist."
@@ -165,15 +172,20 @@ def get_waveforms(
     endtime: Optional[obspy.UTCDateTime] = None,
 ):
     """
+    Main function to read seismic data from a given SeisComp Data Structure (SDS)
+    pathname. First the function tries to use an obspy sds client. If no data are
+    found, a second function tries to read the data from the SDS path.
+    The function returns an obspy stream, which has no traces if no data were found.
+    Gaps are filled by zeros (stream.merge(fill_value=0)).
 
-    :param station:
-    :param network:
-    :param location:
-    :param channel_code:
-    :param date:
-    :param sds_path:
-    :param starttime:
-    :param endtime:
+    :param station: Name of seismic network
+    :param network: Name of seismic station
+    :param location: Location code of seismic station
+    :param channel_code: Channel code of seismic station, e.g. HH, EH, BH, ...
+    :param date: Information about the date as a tuple (year, day of year)
+    :param sds_path: Pathname of SDS (SeisComp Data Structure)
+    :param starttime: Start time of the picking period
+    :param endtime: End time of the picking period
     :return:
     """
     # Try to read data from obspy client
