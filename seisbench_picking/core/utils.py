@@ -67,6 +67,14 @@ def check_parameters(parameters: dict) -> dict:
         msg = f"Start time {parameters['starttime']} is before end time {parameters['endtime']}."
         raise ValueError(msg)
 
+    # Yaml might load start- and end time as datetime.date, however the function only take a str or
+    # obspy.UTCDateTime as input. Therefore, the format is converted to obspy.UTCDateTime class.
+    if isinstance(parameters["starttime"], datetime.date):
+        parameters["starttime"] = obspy.UTCDateTime(parameters["starttime"])
+
+    if isinstance(parameters["endtime"], datetime.date):
+        parameters["endtime"] = obspy.UTCDateTime(parameters["endtime"])
+
     if os.path.isdir(parameters["sds_path"]) is False:
         msg = f"{parameters['sds_path']} does not exist."
         raise FileNotFoundError(msg)
