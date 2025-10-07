@@ -32,6 +32,18 @@ def get_picker(type: str, model_name: str):
             picker = sbm.GPD.load(model_name)
         except FileNotFoundError:
             picker = sbm.GPD.from_pretrained(model_name)
+    elif type.lower() == "skynet":
+        try:
+            picker = sbm.Skynet.load(model_name)
+        except FileNotFoundError:
+            picker = sbm.Skynet.from_pretrained(model_name)
+    elif type.lower() == "pickblue":
+        msg = (
+            "PickBlue is based on EQTransformer or PhaseNet. "
+            "You can load the model by loading the model 'obs'"
+            "into 'EQTransformer' or 'PhaseNet'."
+        )
+        raise ImportError(msg)
     else:
         msg = f"SeisBench model {type} is not implemented in core.picking_interfaces.py"
         raise ValueError(msg)
