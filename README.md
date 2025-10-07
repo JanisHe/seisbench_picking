@@ -92,7 +92,7 @@ to analyse a large dataset, use a for loop and define a new start- and end time 
 iteration. Do not forget to copy your results from the `output_pathname`, otherwise your
 results will be overwritten in each iteration.
 
-## Next steps
+## Next steps/Seismic Phase Association
 One a file with all picks is created, the next step is to build from the picks an
 earthquake catalog by associating the picks. This is done by `seismic phase associators`.
 [Here](https://github.com/JanisHe/association) you can find a package which does the
