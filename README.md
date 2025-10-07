@@ -91,3 +91,9 @@ To keep memory low, it is recommended to pick only for single days. This means i
 to analyse a large dataset, use a for loop and define a new start- and end time in each
 iteration. Do not forget to copy your results from the `output_pathname`, otherwise your
 results will be overwritten in each iteration.
+
+## Next steps
+One a file with all picks is created, the next step is to build from the picks an
+earthquake catalog by associating the picks. This is done by `seismic phase associators`.
+[Here](https://github.com/JanisHe/association) you can find a package which does the
+association using three different seismic phase associators.
