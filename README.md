@@ -38,7 +38,7 @@ More parameters, including optional ones are mentioned in the example `parfile`.
 
 ## Start picking of dataset
 To start the picking, you use the following code:
-```
+```python
 from seisbench_picking.core import main
 
 parfile = "/Path/to/my/parfile.yml"  # or define a dictionary
@@ -62,7 +62,7 @@ main(parfile=parameters)
 ```
 
 In case you get an `ModuleNotFoundError`, you can add the `PythonPath` to your script by
-```
+```python
 import sys
 sys.path.append("/Path/to/my/SeisBench/picking/project")
 ```
